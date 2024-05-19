@@ -42,7 +42,7 @@ while 1:
     # showing found faces
     cv2.imshow("faces in image", img)
     k = cv2.waitKey(30) & 0xFF
-    if k == 27:
+    if k == ord('a'):
         break
 
 cap.release()
