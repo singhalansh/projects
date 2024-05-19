@@ -17,7 +17,6 @@ def draw_keyboard(frame):
             cv2.rectangle(frame, (x, y), (x+50, y+50), (255, 0, 0), 2)
             cv2.putText(frame, key, (x+15, y+35), cv2.FONT_HERSHEY_SIMPLEX, 1, (255, 0, 0), 2)
 
-# Function to detect which key is pressed
 def detect_key(frame, x, y):
     for i, row in enumerate(keys):
         for j, key in enumerate(row):

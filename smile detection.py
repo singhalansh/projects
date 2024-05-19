@@ -46,6 +46,5 @@ while 1:
         break
 
 cap.release()
-# out.release()
 
 cv2.destroyAllWindows()
