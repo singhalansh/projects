@@ -16,12 +16,45 @@ string = ""
 
 # Function to draw the keyboard
 def draw_keyboard(frame):
+    """
+    This function draws the virtual keyboard on the given frame.
+    
+    Parameters:
+    frame (numpy.ndarray): The frame on which the keyboard will be drawn.
+    
+    Returns:
+    None
+    """
+    
+    # Iterate over each row of keys
     for i, row in enumerate(keys):
+        
+        # Iterate over each key in the row
         for j, key in enumerate(row):
-            x = j * 60 + 10 
-            y = i * 60 + 10  # Adjusted key size and position
-            cv2.rectangle(frame, (x, y), (x+50, y+50), (255, 0, 0), 2)  # Adjusted key size
-            cv2.putText(frame, key, (x+15 if key != 'Space' else x+5, y+35), cv2.FONT_HERSHEY_SIMPLEX, 0.5 if key != 'Space' else 0.4, (255, 0, 0), 1)  # Adjusted text size
+            
+            # Calculate the top-left coordinates of the key rectangle
+            x = j * 60 + 10  # Column index multiplied by key width and added to initial x-coordinate
+            y = i * 60 + 10  # Row index multiplied by key height and added to initial y-coordinate
+            
+            # Draw the key rectangle
+            # cv2.rectangle(frame, (x, y), (x+50, y+50), (255, 0, 0), 2)
+            # The key rectangle is drawn with the following parameters:
+            #   - frame: The frame on which the rectangle will be drawn.
+            #   - (x, y): The top-left coordinates of the rectangle.
+            #   - (x+50, y+50): The bottom-right coordinates of the rectangle.
+            #   - (255, 0, 0): The color of the rectangle (RGB values).
+            #   - 2: The thickness of the rectangle's border.
+            
+            # Draw the text on the key
+            # cv2.putText(frame, key, (x+15 if key != 'Space' else x+5, y+35), cv2.FONT_HERSHEY_SIMPLEX, 0.5 if key != 'Space' else 0.4, (255, 0, 0), 1)
+            # The text is drawn with the following parameters:
+            #   - frame: The frame on which the text will be drawn.
+            #   - key: The text to be drawn.
+            #   - (x+15 if key != 'Space' else x+5, y+35): The coordinates of the text's bottom-left corner.
+            #   - cv2.FONT_HERSHEY_SIMPLEX: The font used for the text.
+            #   - 0.5 if key != 'Space' else 0.4: The scale of the text.
+            #   - (255, 0, 0): The color of the text (RGB values).
+            #   - 1: The thickness of the text's border.
 
 def detect_key(frame, x, y):
     for i, row in enumerate(keys):
@@ -36,7 +69,7 @@ def detect_key(frame, x, y):
                 return " " if key=="Space" else key
     return None
 
-source = cv2.VideoCapture(0)
+source = cv2.VideoCapture(1)
 drawing = mp.solutions.drawing_utils
 drawing_styles = mp.solutions.drawing_styles
 hand = mp.solutions.hands
@@ -78,7 +111,7 @@ while True:
             else:
                 last_pressed_key = None
 
-    cv2.putText(frame, string, (20, frame.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 255, 0), 2)
+    cv2.putText(frame, string, (20, frame.shape[0] - 20), cv2.FONT_HERSHEY_SIMPLEX, 1, (12, 7, 168), 2)
     # Underline the result string
     cv2.line(frame, (20, frame.shape[0] - 10), (20 + len(string) * 20, frame.shape[0] - 10), (0, 0, 255), 2)
     
