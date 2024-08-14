@@ -1,5 +1,6 @@
 import cv2
 import mediapipe as mp
+import time
 
 keys = [
     ['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'],
@@ -25,36 +26,19 @@ def draw_keyboard(frame):
     Returns:
     None
     """
-    
     # Iterate over each row of keys
     for i, row in enumerate(keys):
-        
         # Iterate over each key in the row
         for j, key in enumerate(row):
-            
             # Calculate the top-left coordinates of the key rectangle
             x = j * 60 + 10  # Column index multiplied by key width and added to initial x-coordinate
             y = i * 60 + 10  # Row index multiplied by key height and added to initial y-coordinate
             
             # Draw the key rectangle
-            # cv2.rectangle(frame, (x, y), (x+50, y+50), (255, 0, 0), 2)
-            # The key rectangle is drawn with the following parameters:
-            #   - frame: The frame on which the rectangle will be drawn.
-            #   - (x, y): The top-left coordinates of the rectangle.
-            #   - (x+50, y+50): The bottom-right coordinates of the rectangle.
-            #   - (255, 0, 0): The color of the rectangle (RGB values).
-            #   - 2: The thickness of the rectangle's border.
+            cv2.rectangle(frame, (x, y), (x+50, y+50), (255, 0, 0), 2)
             
             # Draw the text on the key
-            # cv2.putText(frame, key, (x+15 if key != 'Space' else x+5, y+35), cv2.FONT_HERSHEY_SIMPLEX, 0.5 if key != 'Space' else 0.4, (255, 0, 0), 1)
-            # The text is drawn with the following parameters:
-            #   - frame: The frame on which the text will be drawn.
-            #   - key: The text to be drawn.
-            #   - (x+15 if key != 'Space' else x+5, y+35): The coordinates of the text's bottom-left corner.
-            #   - cv2.FONT_HERSHEY_SIMPLEX: The font used for the text.
-            #   - 0.5 if key != 'Space' else 0.4: The scale of the text.
-            #   - (255, 0, 0): The color of the text (RGB values).
-            #   - 1: The thickness of the text's border.
+            cv2.putText(frame, key, (x+15 if key != 'Space' else x+5, y+35), cv2.FONT_HERSHEY_SIMPLEX, 0.5 if key != 'Space' else 0.4, (255, 0, 0), 1)
 
 def detect_key(frame, x, y):
     for i, row in enumerate(keys):
@@ -66,10 +50,10 @@ def detect_key(frame, x, y):
             if x1 < x < x2 and y1 < y < y2:
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 cv2.putText(frame, key, (x1+15 if key != 'Space' else x1+5, y1+35), cv2.FONT_HERSHEY_SIMPLEX, 0.5 if key != 'Space' else 0.4, (0, 255, 0), 1)
-                return " " if key=="Space" else key
+                return " " if key == "Space" else key
     return None
 
-source = cv2.VideoCapture(1)
+source = cv2.VideoCapture(0)
 drawing = mp.solutions.drawing_utils
 drawing_styles = mp.solutions.drawing_styles
 hand = mp.solutions.hands
@@ -80,6 +64,9 @@ hands = hand.Hands(
 )
 
 last_pressed_key = None
+last_key_time = 0  # Track the time of the last key press
+debounce_time = 0.5  # 500 milliseconds
+
 while True:
     data, frame = source.read()
     frame = cv2.flip(frame, 1)
@@ -98,16 +85,18 @@ while True:
             x2 = int(hand_landmarks.landmark[12].x * frame.shape[1])
             y2 = int(hand_landmarks.landmark[12].y * frame.shape[0])
 
+            current_time = time.time()
             if not (abs(x1 - x2) <= 0.12 * frame.shape[1] and abs(y1 - y2) <= 0.12 * frame.shape[0]):
                 detected_key = detect_key(frame, x1, y1)
-                if detected_key and detected_key != last_pressed_key:
+                if detected_key and detected_key != last_pressed_key and (current_time - last_key_time) > debounce_time:
                     print(f"Key Pressed: {detected_key}")
-                    if detected_key == '<-' :
+                    if detected_key == '<-':
                         if string != "":
                             string = string[:-1]  # Delete the last character
                     else:
                         string += detected_key
                     last_pressed_key = detected_key
+                    last_key_time = current_time  # Update the time of the last key press
             else:
                 last_pressed_key = None
 
