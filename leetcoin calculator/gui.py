@@ -2,6 +2,16 @@ import tkinter as tk
 from datetime import datetime, timedelta
 import ttkbootstrap as ttk
 from ttkbootstrap.constants import *
+reward_prices = {
+         'Time Travel Ticket': 70,
+        '30-Day Premium Subscription': 5000,
+        'LeetCode T-Shirt': 6000,
+        'LeetCode Cap': 5400,
+        'LeetCode Kit': 7800,
+        'LeetCode Laptop Sleeve': 8000,
+        'LeetCode Big O Notebook': 9900,
+        'LeetCode Hoodie': 9000
+    }
 
 # Function to calculate target date based on user inputs
 def calculate_leetcoins_POTD(current_coins, streak, reward):
@@ -46,16 +56,7 @@ def calculate_leetcoins_checkin(current_coins, streak, reward):
     today = datetime.now()
     
     # Define reward amount based on reward selection
-    reward_prices = {
-         'Time Travel Ticket': 70,
-        '30-Day Premium Subscription': 5000,
-        'LeetCode T-Shirt': 6000,
-        'LeetCode Cap': 5400,
-        'LeetCode Kit': 7800,
-        'LeetCode Laptop Sleeve': 8000,
-        'LeetCode Big O Notebook': 9900,
-        'LeetCode Hoodie': 9000
-    }
+    
     reward_amount = reward_prices[reward]
     
     daily_income = 1
@@ -93,16 +94,7 @@ def calculate_leetcoins_all(current_coins, reward, streak) -> str:
     daily_income = 11
     
     # Define reward amount based on reward selection
-    reward_prices = {
-         'Time Travel Ticket': 70,
-        '30-Day Premium Subscription': 5000,
-        'LeetCode T-Shirt': 6000,
-        'LeetCode Cap': 5400,
-        'LeetCode Kit': 7800,
-        'LeetCode Laptop Sleeve': 8000,
-        'LeetCode Big O Notebook': 9900,
-        'LeetCode Hoodie': 9000
-    }
+    
     reward_amount = reward_prices[reward]
     
     days_since_start = 0
